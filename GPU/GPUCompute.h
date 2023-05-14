@@ -516,6 +516,18 @@ __device__ void ComputeKeysP2SH(uint32_t mode, uint64_t *startx, uint64_t *start
 // -----------------------------------------------------------------------------------------
 // Optimized kernel for compressed P2PKH address only
 
+#if 0
+#define CHECK_P2PKH_POINT(_incr) {                                             \
+_GetHash160Comp(px, false, (uint8_t *)h1);                                     \
+CheckPoint(h1, (_incr), 0, true, sPrefix, lookup32, maxFound, out, P2PKH);     \
+}
+#elif 0
+#define CHECK_P2PKH_POINT(_incr) {                                             \
+_GetHash160CompSym(px, (uint8_t *)h1, (uint8_t *)h2);                          \
+CheckPoint(h1, (_incr), 0, true, sPrefix, lookup32, maxFound, out, P2PKH);     \
+CheckPoint(h2, -(_incr), 0, true, sPrefix, lookup32, maxFound, out, P2PKH);    \
+}
+#else
 #define CHECK_P2PKH_POINT(_incr) {                                             \
 _GetHash160CompSym(px, (uint8_t *)h1, (uint8_t *)h2);                          \
 CheckPoint(h1, (_incr), 0, true, sPrefix, lookup32, maxFound, out, P2PKH);     \
@@ -529,6 +541,7 @@ _GetHash160CompSym(pe2x, (uint8_t *)h1, (uint8_t *)h2);                        \
 CheckPoint(h1, (_incr), 2, true, sPrefix, lookup32, maxFound, out, P2PKH);     \
 CheckPoint(h2, -(_incr), 2, true, sPrefix, lookup32, maxFound, out, P2PKH);    \
 }
+#endif
 
 __device__ void ComputeKeysComp(uint64_t *startx, uint64_t *starty, prefix_t *sPrefix, uint32_t *lookup32, uint32_t maxFound, uint32_t *out) {
 
